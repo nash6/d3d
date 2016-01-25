@@ -12,13 +12,14 @@
 #include "Terrain.h"
 #include "Skybox.h"
 #include "pSystem.h"
+#include "Decorate.h"
 
 //-----------------------------------------------------------------------------
 // GLOBALS
 //-----------------------------------------------------------------------------
 const int Width = 640; //screen width
 const int Height = 480; //screen height
-const float ViewMoveSpeed = 15.0f;
+const float ViewMoveSpeed = 10.0f;
 const float ViewMouseSense = 1.0f;
 
 const float BoxHeight = 5.0f;
@@ -30,9 +31,10 @@ const float BoxUpBound = 5.0f;
 const float BoxRSpeed = 1.0f;
 
 const string snowTex = d3d::mediaPath + "snowflake.dds";
+const string houseXFile = d3d::mediaPath + "polHouse1.x";
 const string planeXFile = d3d::mediaPath + "airplane.x";
 
-D3DXVECTOR3 lightDirection(1.577f, -0.577f, 0.0f);
+D3DXVECTOR3 lightDirection(0.0f, -0.9f, 0.577f);
 D3DXVECTOR3 cameraPos(10.0f, 10.0, 10.0);
 
 //ptr
@@ -43,11 +45,11 @@ Terrain* pTerrain = NULL; //
 Skybox* pSkybox = NULL;
 Snowman* pSnowman = NULL; //snowman 
 Snowman* pSnowmanM = NULL;//moving snowman
+Decorate* pHouse = NULL;
+Decorate* pPlane = NULL;
 LPD3DXMESH pBoxMesh = NULL;
 LPDIRECT3DTEXTURE9    pBoxTexture = NULL;
-LPD3DXMESH pPlaneMesh = NULL;
-std::vector<D3DMATERIAL9>       planeMtrls(0);
-std::vector<IDirect3DTexture9*> planeTextures(0);
+
 LPD3DXFONT        p3dxFont = NULL;
 psys::PSystem* pSnow = 0;
 //var
@@ -70,9 +72,8 @@ bool Display(float timeDelta);
 bool Setup();
 void InputViewChange(float g_fElpasedTime);
 void createBox();
-void createPlane();
-void drawPlane();
-////
+
+
 
 
 int WINAPI WinMain(HINSTANCE hInstance,
@@ -206,14 +207,14 @@ bool Display(float timeDelta)
 
 	//BeginScene
 	mDevice->BeginScene();
-
+	
 	//draw terrain and sky
 	pSkybox->Draw(view);
 	pTerrain->Draw(view);
 	
 	//Box
 	mDevice->SetTexture(0, pBoxTexture);
-	D3DMATERIAL9 mtrl = d3d::WHITE_MTRL;
+	D3DMATERIAL9 mtrl = d3d::BOX_MTRL;
 	mDevice->SetMaterial(&mtrl);
 
 	mDevice->SetTransform(D3DTS_WORLD, &mBoxMatrix);
@@ -231,15 +232,21 @@ bool Display(float timeDelta)
 	D3DXMatrixTranslation(&tmpTranslation, 0.0f, 1.0f, 0.0f);
 	pSnowman->Draw(&tmpTranslation);
 
-	//
-	pSnow->render();
-
+	
 	//plane
-	D3DXMATRIX pMat;
+	D3DXMATRIX pMat, pRMat;
 	D3DXMatrixTranslation(&pMat, 10.0f, 20.0f, 0.0f);
-	pMat *= mBoxOrbitRotation;
-	mDevice->SetTransform(D3DTS_WORLD, &pMat);
-	drawPlane();
+	D3DXMatrixRotationZ(&pRMat, D3DXToRadian(40));
+	pMat = pRMat * pMat * mBoxOrbitRotation;
+	
+	pPlane->draw(pMat);
+	
+	//house
+	D3DXMATRIX hMat, hRMat;
+	D3DXMatrixRotationY(&hRMat, D3DXToRadian(180));
+	D3DXMatrixTranslation(&hMat, -18.0f, 3.0f, - 40.0f);
+	hMat = hRMat * hMat;
+	pHouse->draw(hMat);
 
 	//font
 	RECT destRect1;
@@ -251,7 +258,9 @@ bool Display(float timeDelta)
 		out += "Free.";
 	p3dxFont->DrawText(NULL, out.c_str(), -1, &destRect1, DT_NOCLIP,d3d::CYAN);
 
-	
+	//
+	pSnow->render();
+
 
 	//EndScene
 	mDevice->EndScene();
@@ -261,7 +270,7 @@ bool Display(float timeDelta)
 	return TRUE;
 }
 
-void createBox(void)
+void createBox()
 {
 	D3DXCreateTextureFromFile(mDevice, (d3d::mediaPath + "crate.jpg").c_str(), &pBoxTexture);
 
@@ -370,7 +379,9 @@ bool Setup(){
 		DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"),
 		&p3dxFont);
 
-	createPlane();
+	//decorate
+	pPlane = new Decorate(mDevice, planeXFile);
+	pHouse = new Decorate(mDevice, houseXFile, d3d::mediaPath + "phouse_d.jpg");
 
 	return TRUE;
 }
@@ -434,94 +445,5 @@ void InputViewChange(float g_fElpasedTime)
 		pCamera->fly(-ViewMoveSpeed*g_fElpasedTime);
 
 }
-
-void drawPlane() {
-	for (int i = 0; i < planeMtrls.size(); i++)
-	{
-		mDevice->SetMaterial(&planeMtrls[i]);
-		mDevice->SetTexture(0, planeTextures[i]);
-		pPlaneMesh->DrawSubset(i);
-	}
-}
-void createPlane() {
-	HRESULT hr = 0;
-
-	// Load the XFile data.
-	ID3DXBuffer* adjBuffer = 0;
-	ID3DXBuffer* mtrlBuffer = 0;
-	DWORD numMtrls = 0;
-
-	hr = D3DXLoadMeshFromX(
-		planeXFile.c_str(),
-		D3DXMESH_MANAGED,
-		mDevice,
-		&adjBuffer,
-		&mtrlBuffer,
-		0,
-		&numMtrls,
-		&pPlaneMesh);
-
-	if (FAILED(hr))
-	{
-		::MessageBox(0, "D3DXLoadMeshFromX() - FAILED", 0, 0);
-		return;
-	}
-
-	if (mtrlBuffer != 0 && numMtrls != 0)
-	{
-		D3DXMATERIAL* mtrls = (D3DXMATERIAL*)mtrlBuffer->GetBufferPointer();
-
-		for (int i = 0; i < numMtrls; i++)
-		{
-			// the MatD3D property doesn't have an ambient value set
-			// when its loaded, so set it now:
-			mtrls[i].MatD3D.Ambient = mtrls[i].MatD3D.Diffuse;
-
-			// save the ith material
-			planeMtrls.push_back(mtrls[i].MatD3D);
-
-			// check if the ith material has an associative texture
-			if (mtrls[i].pTextureFilename != 0)
-			{
-				// yes, load the texture for the ith subset
-				IDirect3DTexture9* tex = 0;
-				D3DXCreateTextureFromFile(
-					mDevice,
-					(d3d::mediaPath + string(mtrls[i].pTextureFilename)).c_str(),
-					&tex);
-
-				// save the loaded texture
-				planeTextures.push_back(tex);
-			}
-			else
-			{
-				// no texture for the ith subset
-				planeTextures.push_back(0);
-			}
-		}
-	}
-	d3d::Release<ID3DXBuffer*>(mtrlBuffer); // done w/ buffer
-
-											//
-											// Optimize the mesh.
-											//
-
-	hr = pPlaneMesh->OptimizeInplace(
-		D3DXMESHOPT_ATTRSORT |
-		D3DXMESHOPT_COMPACT |
-		D3DXMESHOPT_VERTEXCACHE,
-		(DWORD*)adjBuffer->GetBufferPointer(),
-		0, 0, 0);
-
-	d3d::Release<ID3DXBuffer*>(adjBuffer); // done w/ buffer
-
-	if (FAILED(hr))
-	{
-		::MessageBox(0, "OptimizeInplace() - FAILED", 0, 0);
-		return;
-	}
-
-}
-
 
 

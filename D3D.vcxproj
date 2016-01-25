@@ -120,6 +120,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="d3d.cpp" />
     <ClCompile Include="d3dUtility.cpp" />
+    <ClCompile Include="Decorate.cpp" />
     <ClCompile Include="pSystem.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -128,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="d3dUtility.h" />
+    <ClInclude Include="Decorate.h" />
     <ClInclude Include="pSystem.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Skybox.h" />

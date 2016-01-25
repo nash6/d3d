@@ -1,7 +1,8 @@
 #include "Snowman.h"
 
-Snowman::Snowman(const LPDIRECT3DDEVICE9 mpDevice) {
-	pDevice = mpDevice;
+Snowman::Snowman(const LPDIRECT3DDEVICE9 mDevice)
+	:pDevice(mDevice) {
+
 	LPDIRECT3DVERTEXBUFFER9 pTempVertexBuffer;
 	//head
 	LPD3DXMESH pTempHeadMesh;
@@ -13,28 +14,24 @@ Snowman::Snowman(const LPDIRECT3DDEVICE9 mpDevice) {
 		&pTempHeadMesh,
 		NULL
 		);
+
 	pTempHeadMesh->CloneMeshFVF(0, Vertex::FVF_Flags, pDevice, &pHeadMesh);
+
 	pHeadMesh->GetVertexBuffer(&pTempVertexBuffer);
 	{
 		int nNumVerts = pHeadMesh->GetNumVertices();
 		Vertex *pVertices = NULL;
 		pTempVertexBuffer->Lock(0, 0, (void**)&pVertices, 0);
-		{
-			for (int i = 0; i < nNumVerts; ++i) {
-				
-				if (i % 4 == 0 || i % 4 == 1)
-					pVertices[i]._u = 0.0;
-				else
-					pVertices[i]._u = 1.0;
-				if (i % 4 == 1 || i % 4 == 3)
-					pVertices[i]._v = 0.0;
-				else
-					pVertices[i]._v = 1.0;
-			}
+		
+		for (int i = 0; i < nNumVerts; ++i) {
+			pVertices[i]._u = d3d::GetRandomFloat(0, 1);//random texture
+			pVertices[i]._v = d3d::GetRandomFloat(0, 1);//random texture
 		}
+		
 		pTempVertexBuffer->Unlock();
 		pTempVertexBuffer->Release();
 	}
+	d3d::Release<LPD3DXMESH>(pTempHeadMesh);
 
 	//body
 	LPD3DXMESH pTempBodyMesh;
@@ -59,23 +56,17 @@ Snowman::Snowman(const LPDIRECT3DDEVICE9 mpDevice) {
 		Vertex *pVertices = NULL;
 
 		pTempVertexBuffer->Lock(0, 0, (void**)&pVertices, 0);
-		{
-			for (int i = 0; i < nNumVerts; ++i) {
-
-				if (i % 4 == 0 || i % 4 == 3)
-					pVertices[i]._u = 0.0;
-				else
-					pVertices[i]._u = 1.0;
-				if (i % 4 == 0 || i % 4 == 1)
-					pVertices[i]._v = 0.0;
-				else
-					pVertices[i]._v = 1.0;
-
-			}
+		
+		for (int i = 0; i < nNumVerts; ++i) {
+			pVertices[i]._u = d3d::GetRandomFloat(0, 1);//random texture
+			pVertices[i]._v = d3d::GetRandomFloat(0, 1);//random texture
 		}
+
 		pTempVertexBuffer->Unlock();
 		pTempVertexBuffer->Release();
+		
 	}
+	d3d::Release<LPD3DXMESH>(pTempBodyMesh);
 
 	//eye
 	LPD3DXMESH pTempEyeMesh;
@@ -106,26 +97,10 @@ Snowman::Snowman(const LPDIRECT3DDEVICE9 mpDevice) {
 		pTempVertexBuffer->Unlock();
 		pTempVertexBuffer->Release();
 	}
-	pTempEyeMesh->CloneMeshFVF(0, Vertex::FVF_Flags, pDevice, &pEye2Mesh);
-	pEye2Mesh->GetVertexBuffer(&pTempVertexBuffer);
-	{
-		int nNumVerts = pEye2Mesh->GetNumVertices();
-		Vertex *pVertices = NULL;
-		pTempVertexBuffer->Lock(0, 0, (void**)&pVertices, 0);
-		{
-			pVertices[0]._u = 0.5;
-			pVertices[0]._v = 0.5;
-			float delta = D3DX_PI * 2 / (nNumVerts - 1);
-			float theta = 0;
-			for (int i = 1; i < nNumVerts; ++i) {
-				pVertices[i]._u = 0.5f * cos(theta) + 0.5f;
-				pVertices[i]._v = 0.5f - 0.5f * sin(theta);
-				theta += delta;
-			}
-		}
-		pTempVertexBuffer->Unlock();
-		pTempVertexBuffer->Release();
-	}
+	
+	pEye1Mesh->CloneMeshFVF(0, Vertex::FVF_Flags, pDevice, &pEye2Mesh);
+
+	d3d::Release<LPD3DXMESH>(pTempEyeMesh);
 	
 	//nose
 	LPD3DXMESH pTempNoseMesh;
@@ -147,40 +122,40 @@ Snowman::Snowman(const LPDIRECT3DDEVICE9 mpDevice) {
 		pTempVertexBuffer->Lock(0, 0, (void**)&pVertices, 0);
 		{
 			for (int i = 0; i < nNumVerts; ++i) {
-
-				if (i % 4 == 0 || i % 4 == 1)
-					pVertices[i]._u = 0.0;
-				else
-					pVertices[i]._u = 1.0;
-				if (i % 4 == 1 || i % 4 == 3)
-					pVertices[i]._v = 0.0;
-				else
-					pVertices[i]._v = 1.0;
+				pVertices[i]._u = d3d::GetRandomFloat(0, 1);
+				pVertices[i]._v = d3d::GetRandomFloat(0, 1);
 			}
 		}
 		pTempVertexBuffer->Unlock();
 		pTempVertexBuffer->Release();
 	}
+	d3d::Release<LPD3DXMESH>(pTempNoseMesh);
 
 	//tex
 	D3DXCreateTextureFromFile(pDevice, snowTexFile.c_str(), &pSnowTexture);
 	D3DXCreateTextureFromFile(pDevice, noseTexFile.c_str(), &pNoseTexture);
 	D3DXCreateTextureFromFile(pDevice, eyeTexFile.c_str(), &pEyeTexture);
+
 	pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
-	
 }
 
 Snowman::~Snowman() {
-	if (pHeadMesh)
-		pHeadMesh->Release();
+	d3d::Release<LPD3DXMESH>(pHeadMesh);
+	d3d::Release<LPD3DXMESH>(pBodyMesh);
+	d3d::Release<LPD3DXMESH>(pEye1Mesh);
+	d3d::Release<LPD3DXMESH>(pEye2Mesh);
+	d3d::Release<LPD3DXMESH>(pNoseMesh);
+
+	d3d::Release<LPDIRECT3DTEXTURE9>(pSnowTexture);
+	d3d::Release<LPDIRECT3DTEXTURE9>(pNoseTexture);
+	d3d::Release<LPDIRECT3DTEXTURE9>(pEyeTexture);
 }
 
 bool Snowman::Draw(const D3DXMATRIX* const world) {
-	
-	
+	//head & body
 	pDevice->SetMaterial(&snowMtrl);
 	pDevice->SetTexture(0, pSnowTexture);
 	
@@ -197,7 +172,6 @@ bool Snowman::Draw(const D3DXMATRIX* const world) {
 	D3DXMatrixTranslation(&tmpMat, 0.0f, bodyLen / 2, 0.0f);
 	D3DXMATRIX bodyMat = rxMat * tmpMat * (*world);
 	pDevice->SetTransform(D3DTS_WORLD, &bodyMat);
-	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	pBodyMesh->DrawSubset(0);
 
 	//draw eye

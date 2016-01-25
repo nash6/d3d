@@ -24,14 +24,12 @@ public:
 	void getViewMatrix(D3DXMATRIX* V);
 	void setCameraType(CameraType cameraType);
 	void getPosition(D3DXVECTOR3* pos);
-	void setPosition(D3DXVECTOR3* pos);
-	void setFollowPos(D3DXVECTOR3* pos, float orbit);
-
+	void setPosition(D3DXVECTOR3* pos);//init camera pos
+	void setFollowPos(D3DXVECTOR3* pos, float orbit);//update box pos
 	void getRight(D3DXVECTOR3* right);
 	void getUp(D3DXVECTOR3* up);
 	void getLook(D3DXVECTOR3* look);
-
-	bool getFollow();
+	bool getFollow();//get follow box flag
 	void setBoxSize(float h, float w, float d);
 
 private:
@@ -41,18 +39,17 @@ private:
 	D3DXVECTOR3 _look;
 	D3DXVECTOR3 _pos;
 
-	bool  outofBox();
-	bool  floatAbsBigger(float a, float b);
+	bool  outofBox();//judge if camera is on the box or not
+	bool  floatAbsBigger(float a, float b);//a>b
 	void judgeFollow(D3DXVECTOR3 moving, float units);
 	bool followBox = false;
 
-	//Box Coord
-	D3DXVECTOR3 boxPos;
-	D3DXVECTOR3 C2BoxPos;
-	float boxH = 0;
-	float boxW = 0;
-	float boxD = 0;
-
-	const float maxH = 50.0f;
+	//Box Var
+	D3DXVECTOR3 boxPos;//Box pos
+	D3DXVECTOR3 C2BoxPos;//Camera to Box pos
+	float boxH = 0;//Box Height
+	float boxW = 0;//Box Weight
+	float boxD = 0;//Box Depth
+	const float maxH = 10.0f;//max bounding Height
 };
 #endif // __cameraH__

@@ -17,7 +17,7 @@ public:
 private:
 	void init(string xFileStr, string efFileStr, string texFileStr,
 		const D3DXMATRIX& proj, const D3DXMATRIX& view, D3DLIGHT9& lightDir);
-	void setLight(D3DLIGHT9& lightDir);
+	void setLight(D3DLIGHT9& light);
 	IDirect3DDevice9* pDevice = NULL;
 
 	ID3DXEffect* pEffect = 0;

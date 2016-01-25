@@ -16,7 +16,6 @@ void Terrain::setLight(D3DLIGHT9& lightDir) {
 	pEffect->SetFloatArray("I_d", ld, 4);
 	float ls[] = { lightDir.Specular.a, lightDir.Specular.b, lightDir.Specular.g, lightDir.Specular.r };
 	pEffect->SetFloatArray("I_s", ls, 4);
-	
 }
 
 void Terrain::Draw(D3DXMATRIX& viewMat) {
@@ -30,7 +29,6 @@ void Terrain::Draw(D3DXMATRIX& viewMat) {
 	for (UINT i = 0; i < numPasses; i++)
 	{
 		pEffect->BeginPass(i);
-
 		for (UINT j = 0; j < numMtrls; j++)
 		{
 			Mesh->DrawSubset(j);

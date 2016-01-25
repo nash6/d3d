@@ -36,6 +36,9 @@
     <ClCompile Include="pSystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Decorate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3dUtility.h">
@@ -57,6 +60,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="pSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Decorate.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

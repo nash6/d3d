@@ -17,6 +17,7 @@ public:
 	bool Draw(const D3DXMATRIX* const world);
 private:
 	LPDIRECT3DDEVICE9 pDevice;
+
 	LPD3DXMESH pHeadMesh;
 	LPD3DXMESH pBodyMesh;
 	LPD3DXMESH pEye1Mesh;
@@ -27,25 +28,27 @@ private:
 	LPDIRECT3DTEXTURE9 pNoseTexture;
 	LPDIRECT3DTEXTURE9 pEyeTexture;
 
-	D3DMATERIAL9 snowMtrl = d3d::WHITE_MTRL;
-	const string snowTexFile = d3d::mediaPath + "snowTex.jpg";
-	
-	//head
+	//head & body
+	D3DMATERIAL9 snowMtrl = d3d::SNOW_MTRL;
+	const string snowTexFile = d3d::mediaPath + "snowTex.png";
 	const float headRadio = 1.8f;
-	//body
+
 	const float bodyNeck = 0.5f;
 	const float bodyFoot = 3.0f;
 	const float bodyLen = 3.0f;
+
 	//eye
+	const D3DMATERIAL9 eyeMtr = d3d::EYE_MTRL;
+	const string eyeTexFile = d3d::mediaPath + "eye.jpg";
 	const float eyeLen = 0.15f;
-	const D3DMATERIAL9 eyeMtr = d3d::WHITE_MTRL;
-	const float eyeSplit = 15.0f;
-	const float eyeHeight = 15.0f;
-	const string eyeTexFile = d3d::mediaPath+"eye.jpg";
+	const float eyeSplit = 20.0f;
+	const float eyeHeight = 18.0f;
+	
 	//nose
-	const float noseLen = 0.8f;
-	const float noseBottomRadius = 0.15f;
-	const D3DMATERIAL9 noseMtr = d3d::WHITE_MTRL;
-	const string noseTexFile = d3d::mediaPath+"nose.jpg";
+	const D3DMATERIAL9 noseMtr = d3d::NOSE_MTRL;
+	const string noseTexFile = d3d::mediaPath + "nose.jpg";
+	const float noseLen = 1.f;
+	const float noseBottomRadius = 0.3f;
+	
 };
 #endif //__SnowmanH__

@@ -32,9 +32,9 @@ texture Texture0 <  string type = "CUBE"; string name = "ripples.dds"; >;
 
 // Set by EffectInstance when mesh is loaded
 // (Default values provided for Effect Edit)
-float4 Diffuse = float4( 0.95f, 0.95f, 1.f, 1.f );
-float4 Ambient = float4( 0.95f, 0.95f, 1.f, 1.f );
-float4 Specular = float4( 0.2f, 0.2f,  0.2f, 1.f );
+float4 Diffuse = float4( 0.992157, 0.984314, 0.968628, 1.0 );
+float4 Ambient = float4( 0.992157, 0.984314, 0.968628, 1.0 );
+float4 Specular = float4( 0.15, 0.15, 0.15, 1.0 );
 
 
 //--------------------------------------------------------------------------------------

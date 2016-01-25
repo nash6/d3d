@@ -21,11 +21,13 @@ private:
 	ID3DXEffect* pEffect = NULL;
 	ID3DXMesh* Mesh = NULL;
 
+	//effect para handle
 	D3DXHANDLE viewMatHandle;
 	D3DXHANDLE projMatHandle;
 	D3DXHANDLE texHandle;
 	D3DXHANDLE techHandle;
 
+	//effect para str
 	const string viewMat = "matView";
 	const string projMat = "matProj";
 	const string tex0 = "Texture0";

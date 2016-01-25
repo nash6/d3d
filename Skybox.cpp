@@ -1,7 +1,8 @@
 #include "Skybox.h"
 
-Skybox::Skybox(IDirect3DDevice9* device, const D3DXMATRIX& proj, const D3DXMATRIX& view) {
-	pDevice = device;
+Skybox::Skybox(IDirect3DDevice9* device, const D3DXMATRIX& proj, const D3DXMATRIX& view)
+	:pDevice(device) {
+
 	init(skyXFile, skyEfFile, skyTexFile,
 		proj, view);
 }
@@ -32,11 +33,10 @@ bool Skybox::init(string xFileStr, string efFileStr, string texFileStr,
 	const D3DXMATRIX& proj, const D3DXMATRIX& view) {
 
 	HRESULT hr = 0;
-
-	// Load the XFile data.
 	ID3DXBuffer* adjBuffer = 0;
 	ID3DXBuffer* mtrlBuffer = 0;
 
+	// Load the XFile data.
 	hr = D3DXLoadMeshFromX(
 		xFileStr.c_str(),
 		D3DXMESH_MANAGED,
@@ -52,7 +52,9 @@ bool Skybox::init(string xFileStr, string efFileStr, string texFileStr,
 		::MessageBox(0, "D3DXLoadMeshFromX() - FAILED", 0, 0);
 		return false;
 	}
-	
+	d3d::Release<ID3DXBuffer*>(adjBuffer);
+	d3d::Release<ID3DXBuffer*>(mtrlBuffer);
+
 	// Create effect.
 	ID3DXBuffer* errorBuffer = 0;
 	hr = D3DXCreateEffectFromFile(
@@ -85,14 +87,14 @@ bool Skybox::init(string xFileStr, string efFileStr, string texFileStr,
 	texHandle = pEffect->GetParameterByName(0, tex0.c_str());
 	techHandle = pEffect->GetTechniqueByName(tec0.c_str());
 
-
+	// Set Mat
 	pEffect->SetMatrix(viewMatHandle, &view);
 	pEffect->SetMatrix(projMatHandle, &proj);
 
 	// Set texture
 	IDirect3DCubeTexture9* tex = 0;
 	hr = D3DXCreateCubeTextureFromFile(pDevice, texFileStr.c_str(), &tex);
-	hr = pEffect->SetTexture("Texture0", tex);
+	hr = pEffect->SetTexture(texHandle, tex);
 	d3d::Release<IDirect3DCubeTexture9*>(tex);
 
 	return true;

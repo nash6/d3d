@@ -22,7 +22,7 @@ bool PSystem::init(IDirect3DDevice9* device, const char* texFileName)
 {
 	// vertex buffer's size does not equal the number of particles in our system.  We
 	// use the vertex buffer to draw a portion of our particles at a time.  The arbitrary
-	// size we choose for the vertex buffer is specified by the _vbSize variable.
+	// size we choose for the vertex buffsnowTex.pnger is specified by the _vbSize variable.
 
 	_device = device; // save a ptr to the device
 

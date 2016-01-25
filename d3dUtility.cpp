@@ -1,7 +1,4 @@
-
-
 #include "d3dUtility.h"
-
 
 bool d3d::InitD3D(
 	HINSTANCE hInstance,
@@ -12,10 +9,8 @@ bool d3d::InitD3D(
 	int nCmdShow,
 	HWND& g_hWnd)
 {
-	//
+	
 	// Create the main application window.
-	//
-
 	WNDCLASSEX winClass;
 	MSG        uMsg;
 
@@ -48,13 +43,8 @@ bool d3d::InitD3D(
 	ShowWindow(g_hWnd, nCmdShow);
 	UpdateWindow(g_hWnd);
 
-	
-	//
 	// Init D3D: 
-	//
-
 	HRESULT hr = 0;
-
 	// Step 1: Create the IDirect3D9 object.
 	LPDIRECT3D9 g_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 
@@ -120,7 +110,6 @@ bool d3d::InitD3D(
 		return false;
 	}
 
-
 	g_pD3D->Release(); // done with d3d9 object
 
 	return true;
@@ -159,7 +148,7 @@ D3DLIGHT9 d3d::InitDirectionalLight(const D3DXVECTOR3& direction, const D3DXCOLO
 	::ZeroMemory(&light, sizeof(light));
 
 	light.Type = D3DLIGHT_DIRECTIONAL;
-	light.Ambient = color * 0.6f;
+	light.Ambient = color * 0.4f;
 	light.Diffuse = color;
 	light.Specular = color * 0.6f;
 	light.Direction = direction;
@@ -208,7 +197,8 @@ D3DLIGHT9 d3d::InitSpotLight(const D3DXVECTOR3& position, const D3DXVECTOR3& dir
 	return light;
 }
 
-D3DMATERIAL9 d3d::InitMtrl(const D3DXCOLOR& a, const D3DXCOLOR& d, const D3DXCOLOR& s, const D3DXCOLOR& e, float p)
+D3DMATERIAL9 d3d::InitMtrl(const D3DXCOLOR& a, const D3DXCOLOR& d, const D3DXCOLOR& s, 
+	const D3DXCOLOR& e, float p)
 {
 	D3DMATERIAL9 mtrl;
 	mtrl.Ambient = a;

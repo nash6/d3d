@@ -9,7 +9,7 @@ Camera::Camera()
 	_up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	_look = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 
-	C2BoxPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	C2BoxPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);//Camera to Box pos
 }
 
 Camera::Camera(CameraType cameraType)
@@ -38,17 +38,17 @@ void Camera::setPosition(D3DXVECTOR3* pos)
 }
 
 void Camera::setFollowPos(D3DXVECTOR3* mpos, float orbit) {
-	boxPos = *mpos;
+	boxPos = *mpos; //set box pos
 	if (followBox) {
 		D3DXMATRIX T;
 		D3DXMatrixRotationY(&T, orbit);
-		D3DXVec3TransformCoord(&_pos, &_pos, &T);
-		yaw(orbit);
+		D3DXVec3TransformCoord(&_pos, &_pos, &T);//orbit camera pos following the orbiting box
+		yaw(orbit);//yaw to stay view
 	}
 	else {
-		C2BoxPos = _pos - boxPos;
-		if (!outofBox()) {
-			followBox = true;
+		C2BoxPos = _pos - boxPos;//camera pos in box xyz
+		if (!outofBox()) {//this happened when box carry the still camera
+			followBox = true;//on the box now
 		}
 	}
 }
@@ -76,7 +76,7 @@ void Camera::walk(float units)
 	}
 
 	if (_cameraType == AIRCRAFT)
-		_pos += _look * units;
+		_pos += _look * units;//not support follow box
 }
 
 void Camera::strafe(float units)
@@ -114,7 +114,6 @@ void Camera::pitch(float angle)
 void Camera::yaw(float angle)
 {
 	D3DXMATRIX T;
-
 	// rotate around world y (0, 1, 0) always for land object
 	if (_cameraType == LANDOBJECT)
 		D3DXMatrixRotationY(&T, angle);
@@ -180,7 +179,8 @@ void Camera::setBoxSize(float h, float w, float d) {
 }
 
 bool Camera::outofBox() {
-	if (floatAbsBigger(C2BoxPos.x, boxW / 2) || floatAbsBigger(C2BoxPos.z, boxD / 2) || C2BoxPos.y > (boxH / 2 + maxH))
+	if (floatAbsBigger(C2BoxPos.x, boxW / 2) || floatAbsBigger(C2BoxPos.z, boxD / 2) ||
+		C2BoxPos.y > (boxH / 2 + maxH) || C2BoxPos.y < (-boxH / 2))
 		return true;
 	else
 		return false;
@@ -193,18 +193,16 @@ bool  Camera::floatAbsBigger(float a, float b) {
 		return false;
 }
 
-
-
 void Camera::judgeFollow(D3DXVECTOR3 moving, float units) {
 	_pos += moving * units;
 	C2BoxPos = _pos - boxPos;
 	if (followBox) {		
-		if (outofBox()) {
+		if (outofBox()) {//walk out of box
 			followBox = false;
 		}
 	}
 	else {
-		if (!outofBox())
+		if (!outofBox())//walk onto box
 			followBox = true;
 	}	
 }
