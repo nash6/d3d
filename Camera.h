@@ -50,6 +50,9 @@ private:
 	float boxH = 0;//Box Height
 	float boxW = 0;//Box Weight
 	float boxD = 0;//Box Depth
-	const float maxH = 10.0f;//max bounding Height
+	const float maxBoundingH = 10.0f;//max bounding Height
+
+	const float minHeight = 1.5f;
+
 };
 #endif // __cameraH__

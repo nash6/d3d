@@ -32,9 +32,12 @@ texture Texture0 <  string type = "CUBE"; string name = "ripples.dds"; >;
 
 // Set by EffectInstance when mesh is loaded
 // (Default values provided for Effect Edit)
-float4 Diffuse = float4( 0.992157, 0.984314, 0.968628, 1.0 );
-float4 Ambient = float4( 0.992157, 0.984314, 0.968628, 1.0 );
-float4 Specular = float4( 0.15, 0.15, 0.15, 1.0 );
+float4 Diffuse = float4( 0.95f, 0.95f, 1.f, 1.f );
+float4 Ambient = float4( 0.95f, 0.95f, 1.f, 1.f );
+float4 Specular = float4( 0.2f, 0.2f,  0.2f, 1.f );
+//float4 Diffuse = float4( 0.992157, 0.984314, 0.968628, 1.0 );
+//float4 Ambient = float4( 0.992157, 0.984314, 0.968628, 1.0 );
+//float4 Specular = float4( 0.15, 0.15, 0.15, 1.0 );
 
 
 //--------------------------------------------------------------------------------------
@@ -110,7 +113,9 @@ float4 PS( in  float2 iT0      : TEXCOORD0,
 
     // Calculate the diffuse coefficient
     float NdotL = dot( Normal.rgb, ToLight);
-    
+	//float3 tt = ( 0.85, 0.85, 0.85);
+    //float NdotL = dot( tt , ToLight);
+	
     // Calcuate the specular coefficient
     float NdotH = dot( Normal.rgb, Half );
     NdotH *= NdotH;
@@ -140,8 +145,6 @@ technique tec0
 		VertexShader = compile vs_2_0 VS();
         PixelShader  = compile ps_2_0 PS();
 		
-		
-
         ZEnable          = TRUE;
         ZWriteEnable     = TRUE;
         AlphaBlendEnable = FALSE;

@@ -89,7 +89,6 @@ bool d3d::InitD3D(
 	else
 		dwBehaviorFlags |= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 
-
 	// Step 3: Fill out the D3DPRESENT_PARAMETERS structure.
 	D3DPRESENT_PARAMETERS d3dpp;
 	memset(&d3dpp, 0, sizeof(d3dpp));
@@ -99,7 +98,7 @@ bool d3d::InitD3D(
 	d3dpp.Windowed = windowed;
 	d3dpp.EnableAutoDepthStencil = TRUE;
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;//D3DPRESENT_INTERVAL_IMMEDIATE
 
 	// Step 4: Create the device.
 	if (FAILED(g_pD3D->CreateDevice(D3DADAPTER_DEFAULT, deviceType, g_hWnd,

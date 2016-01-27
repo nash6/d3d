@@ -13,11 +13,12 @@ class Terrain
 public:
 	Terrain(IDirect3DDevice9* device, const D3DXMATRIX& proj, const D3DXMATRIX& view, D3DLIGHT9& lightDir);
 	void Draw(D3DXMATRIX& viewMat);
+	void setLight(D3DLIGHT9& light);
 
 private:
 	void init(string xFileStr, string efFileStr, string texFileStr,
 		const D3DXMATRIX& proj, const D3DXMATRIX& view, D3DLIGHT9& lightDir);
-	void setLight(D3DLIGHT9& light);
+	
 	IDirect3DDevice9* pDevice = NULL;
 
 	ID3DXEffect* pEffect = 0;
@@ -35,7 +36,7 @@ private:
 	const string terrainXFile = d3d::mediaPath + "terrain01.x";
 	const string terrainEfFile = "snow.fx";
 	const string terrainTexFile = d3d::mediaPath + "ripples.dds";
-	
+
 };
 
 #endif // __TerrainH__

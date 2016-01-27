@@ -180,7 +180,7 @@ void Camera::setBoxSize(float h, float w, float d) {
 
 bool Camera::outofBox() {
 	if (floatAbsBigger(C2BoxPos.x, boxW / 2) || floatAbsBigger(C2BoxPos.z, boxD / 2) ||
-		C2BoxPos.y > (boxH / 2 + maxH) || C2BoxPos.y < (-boxH / 2))
+		C2BoxPos.y > (boxH / 2 + maxBoundingH) || C2BoxPos.y < (-boxH / 2 - 2.0f))
 		return true;
 	else
 		return false;
@@ -195,6 +195,8 @@ bool  Camera::floatAbsBigger(float a, float b) {
 
 void Camera::judgeFollow(D3DXVECTOR3 moving, float units) {
 	_pos += moving * units;
+	if (_pos.y < minHeight)
+		_pos.y = minHeight;
 	C2BoxPos = _pos - boxPos;
 	if (followBox) {		
 		if (outofBox()) {//walk out of box

@@ -19,7 +19,6 @@ void Terrain::setLight(D3DLIGHT9& lightDir) {
 }
 
 void Terrain::Draw(D3DXMATRIX& viewMat) {
-
 	pEffect->SetMatrix(viewMatHandle, &viewMat);
 	pEffect->SetTechnique(techHandle);
 
@@ -36,7 +35,6 @@ void Terrain::Draw(D3DXMATRIX& viewMat) {
 		pEffect->EndPass();
 	}
 	pEffect->End();
-
 }
 
 void Terrain::init(string xFileStr, string efFileStr, string texFileStr,
@@ -89,7 +87,6 @@ void Terrain::init(string xFileStr, string efFileStr, string texFileStr,
 		return;
 	}
 
-	
 	// Save Frequently Accessed Parameter Handles
 	worldMatHandle = pEffect->GetParameterByName(0, "matWorld");
 	viewMatHandle = pEffect->GetParameterByName(0, "matViewInv");

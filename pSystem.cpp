@@ -272,7 +272,7 @@ void PSystem::removeDeadParticles()
 Snow::Snow(d3d::BoundingBox* boundingBox, int numParticles)
 {
 	_boundingBox = *boundingBox;
-	_size = 0.25f;
+	_size = 0.4f;
 	_vbSize = 2048;
 	_vbOffset = 0;
 	_vbBatchSize = 512;
